@@ -164,7 +164,7 @@ Hence why a greater depth of selector specificity is needed.
         .fc-slice__item {
             width: 25%;
 
-            .fc-item__title {
+            .fc-item__header {
                 @include fs-headline(2, true);
             }
         }
