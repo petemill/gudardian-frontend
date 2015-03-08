@@ -1,8 +1,6 @@
-define([
-    'videojs',
-    'videojsads',
-    'videojsima',
-    'videojspersistvolume',
-    'videojsplaylist',
-    'videojsembed'
-], function () {});
+import 'videojs';
+import 'videojsads';
+import 'videojsima';
+import 'videojspersistvolume';
+import 'videojsplaylist';
+import 'videojsembed';

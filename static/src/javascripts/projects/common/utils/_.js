@@ -1,9 +1,3 @@
-define([
-    'lodash/main'
-], function (
-    main
-) {
+import main from 'lodash/main';
 
-    return main;
-
-});
+export default main;

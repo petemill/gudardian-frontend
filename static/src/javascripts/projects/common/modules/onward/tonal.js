@@ -1,59 +1,51 @@
-define([
-    'common/utils/config',
-    'common/utils/mediator',
-    'common/modules/analytics/register',
-    'common/modules/component'
-], function (
-    config,
-    mediator,
-    register,
-    Component
-) {
+import config from 'common/utils/config';
+import mediator from 'common/utils/mediator';
+import register from 'common/modules/analytics/register';
+import Component from 'common/modules/component';
 
-    var noop = function () {};
+var noop = function() {};
 
-    function TonalComponent() {
+function TonalComponent() {
 
-        register.begin('tonal-content');
+    register.begin('tonal-content');
 
-        this.edition = config.page.edition.toLowerCase();
+    this.edition = config.page.edition.toLowerCase();
 
-        //Ensures we only fetch supported tones.
-        if (this.isSupported()) {
-            this.endpoint = this.getEndpoint();
-        } else {
-            this.fetch = noop;
-        }
+    //Ensures we only fetch supported tones.
+    if (this.isSupported()) {
+        this.endpoint = this.getEndpoint();
+    } else {
+        this.fetch = noop;
     }
+}
 
-    Component.define(TonalComponent);
+Component.define(TonalComponent);
 
-    TonalComponent.prototype.tones = {
-        features: '-alpha/features/feature-stories.json',
-        comment: '-alpha/contributors/feature-stories.json'
-    };
+TonalComponent.prototype.tones = {
+    features: '-alpha/features/feature-stories.json',
+    comment: '-alpha/contributors/feature-stories.json'
+};
 
-    TonalComponent.prototype.getEndpoint = function () {
-        return '/container/' + this.edition + this.tones[this.getTone()];
-    };
+TonalComponent.prototype.getEndpoint = function() {
+    return '/container/' + this.edition + this.tones[this.getTone()];
+};
 
-    TonalComponent.prototype.isSupported = function () {
-        return this.getTone() in this.tones;
-    };
+TonalComponent.prototype.isSupported = function() {
+    return this.getTone() in this.tones;
+};
 
-    TonalComponent.prototype.getTone = function () {
-        return config.page.tones.split(',')[0].toLowerCase();
-    };
+TonalComponent.prototype.getTone = function() {
+    return config.page.tones.split(',')[0].toLowerCase();
+};
 
-    TonalComponent.prototype.ready = function () {
-        var container = document.body.querySelector('.tone-feature');
-        mediator.emit('ui:images:upgradePicture', container);
-        register.end('tonal-content');
-    };
+TonalComponent.prototype.ready = function() {
+    var container = document.body.querySelector('.tone-feature');
+    mediator.emit('ui:images:upgradePicture', container);
+    register.end('tonal-content');
+};
 
-    TonalComponent.prototype.error = function () {
-        register.error('tonal-content');
-    };
+TonalComponent.prototype.error = function() {
+    register.error('tonal-content');
+};
 
-    return TonalComponent;
-});
+export default TonalComponent;

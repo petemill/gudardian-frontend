@@ -1,15 +1,9 @@
-define([
-    'common/modules/gallery/lightbox'
-], function (
-    Lightbox
-) {
+import Lightbox from 'common/modules/gallery/lightbox';
 
-    var ready = function () {
-            Lightbox.init();
-        };
+var ready = function() {
+    Lightbox.init();
+};
 
-    return {
-        init: ready
-    };
-
-});
+export default {
+    init: ready
+};

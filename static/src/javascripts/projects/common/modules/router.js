@@ -1,70 +1,76 @@
 //Client-side routing module
 //Heavily inspired by https://github.com/PaulKinlan/leviroutes/blob/master/routes.js
 /*jshint boss:true, curly:false */
-define(function () {
+function Router() {
 
-    function Router() {
+    var routes = [],
+        matchRoute = function(url) {
+            var i, routeExec, routeMatch, params, g, group,
+                route = null;
+            for (i = 0; route = routes[i]; i++) {
 
-        var routes = [],
-            matchRoute = function (url) {
-                var i, routeExec, routeMatch, params, g, group,
-                    route = null;
-                for (i = 0; route = routes[i]; i++) {
+                routeExec = route.regex.regexp.exec(url);
+                routeMatch = (routeExec) ? true : false;
 
-                    routeExec  = route.regex.regexp.exec(url);
-                    routeMatch = (routeExec) ? true : false;
+                if (routeMatch) {
 
-                    if (routeMatch) {
-
-                        params = {};
-                        for (g in route.regex.groups) {
-                            group = route.regex.groups[g];
-                            params[g] = routeExec[group + 1];
-                        }
-
-                        route.callback({url: url, params: params});
-                        return true;
+                    params = {};
+                    for (g in route.regex.groups) {
+                        group = route.regex.groups[g];
+                        params[g] = routeExec[group + 1];
                     }
+
+                    route.callback({
+                        url: url,
+                        params: params
+                    });
+                    return true;
                 }
+            }
 
-                return false;
+            return false;
+        };
+
+    this.parseRoute = function(path) {
+        this.parseGroups = function(loc) {
+            var nameRegexp = new RegExp(':([^/.\\\\]+)', 'g'),
+                newRegexp = '' + loc,
+                groups = {},
+                matches = null,
+                i = 0;
+
+            // Find the places to edit.
+            while (matches = nameRegexp.exec(loc)) {
+                groups[matches[1]] = i++;
+                newRegexp = newRegexp.replace(matches[0], '([^/.\\\\]+)');
+            }
+
+            newRegexp += '$'; // Only do a full string match
+
+            return {
+                groups: groups,
+                regexp: new RegExp(newRegexp)
             };
-
-        this.parseRoute = function (path) {
-            this.parseGroups = function (loc) {
-                var nameRegexp = new RegExp(':([^/.\\\\]+)', 'g'),
-                    newRegexp = '' + loc,
-                    groups = {},
-                    matches = null,
-                    i = 0;
-
-                // Find the places to edit.
-                while (matches = nameRegexp.exec(loc)) {
-                    groups[matches[1]] = i++;
-                    newRegexp = newRegexp.replace(matches[0], '([^/.\\\\]+)');
-                }
-
-                newRegexp += '$'; // Only do a full string match
-
-                return { groups: groups, regexp: new RegExp(newRegexp)};
-            };
-
-            return this.parseGroups(path);
         };
 
-        this.get = function (route, callback) {
-            routes.push({regex: this.parseRoute(route), callback: callback});
-        };
+        return this.parseGroups(path);
+    };
 
-        this.getRoutes = function () {
-            return routes;
-        };
+    this.get = function(route, callback) {
+        routes.push({
+            regex: this.parseRoute(route),
+            callback: callback
+        });
+    };
 
-        this.init = function () {
-            matchRoute(window.location.pathname);
-        };
+    this.getRoutes = function() {
+        return routes;
+    };
 
-    }
+    this.init = function() {
+        matchRoute(window.location.pathname);
+    };
 
-    return Router;
-});
+}
+
+export default Router;

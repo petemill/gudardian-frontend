@@ -1,53 +1,29 @@
-define([
-    'bean',
-    'bonzo',
-    'qwery',
-    'raven',
-
-    'common/utils/$',
-    'common/utils/_',
-    'common/utils/ajax-promise',
-    'common/utils/config',
-    'common/utils/detect',
-    'common/utils/mediator',
-    'common/utils/scroller',
-
-    'common/modules/analytics/discussion',
-    'common/modules/analytics/register',
-    'common/modules/component',
-    'common/modules/discussion/api',
-    'common/modules/discussion/comment-box',
-    'common/modules/discussion/comments',
-    'common/modules/identity/api',
-    'common/modules/user-prefs'
-], function(
-    bean,
-    bonzo,
-    qwery,
-    raven,
-    $,
-    _,
-    ajaxPromise,
-    config,
-    detect,
-    mediator,
-    scroller,
-    DiscussionAnalytics,
-    register,
-    Component,
-    DiscussionApi,
-    CommentBox,
-    Comments,
-    Id,
-    userPrefs
-) {
+import bean from 'bean';
+import bonzo from 'bonzo';
+import qwery from 'qwery';
+import raven from 'raven';
+import $ from 'common/utils/$';
+import _ from 'common/utils/_';
+import ajaxPromise from 'common/utils/ajax-promise';
+import config from 'common/utils/config';
+import detect from 'common/utils/detect';
+import mediator from 'common/utils/mediator';
+import scroller from 'common/utils/scroller';
+import DiscussionAnalytics from 'common/modules/analytics/discussion';
+import register from 'common/modules/analytics/register';
+import Component from 'common/modules/component';
+import DiscussionApi from 'common/modules/discussion/api';
+import CommentBox from 'common/modules/discussion/comment-box';
+import Comments from 'common/modules/discussion/comments';
+import Id from 'common/modules/identity/api';
+import userPrefs from 'common/modules/user-prefs';
 
 var Loader = function() {
     register.begin('discussion');
 };
 Component.define(Loader);
 
-Loader.prototype.classes = { };
+Loader.prototype.classes = {};
 
 Loader.prototype.componentClass = 'discussion';
 Loader.prototype.comments = null;
@@ -59,7 +35,9 @@ Loader.prototype.initTopComments = function() {
         e.preventDefault();
         scroller.scrollToElement(qwery('.js-discussion-toolbar'), 100);
         var commentId = bonzo(e.currentTarget).data('comment-id');
-        this.loadComments({comment: commentId});
+        this.loadComments({
+            comment: commentId
+        });
     });
 
     return ajaxPromise({
@@ -89,7 +67,9 @@ Loader.prototype.initMainComments = function() {
     var order = userPrefs.get('discussion.order') || (this.getDiscussionClosed() ? 'oldest' : 'newest');
     var threading = userPrefs.get('discussion.threading') || 'collapsed';
 
-    var defaultPagesize = detect.isBreakpoint({min: 'tablet'}) ?  25 : 10;
+    var defaultPagesize = detect.isBreakpoint({
+        min: 'tablet'
+    }) ? 25 : 10;
 
     this.comments = new Comments({
         discussionId: this.getDiscussionId(),
@@ -136,7 +116,9 @@ Loader.prototype.initMainComments = function() {
             }
             this.initPageSizeDropdown(pageSize);
 
-            if (config.switches.discussionPageSize && detect.isBreakpoint({min: 'tablet'})) {
+            if (config.switches.discussionPageSize && detect.isBreakpoint({
+                    min: 'tablet'
+                })) {
                 this.comments.options.pagesize = pageSize;
             }
 
@@ -151,8 +133,9 @@ Loader.prototype.initMainComments = function() {
         var shouldTruncate = !commentId && window.location.hash !== '#comments';
 
         this.loadComments({
-            comment: commentId,
-            shouldTruncate: shouldTruncate})
+                comment: commentId,
+                shouldTruncate: shouldTruncate
+            })
             .catch(function(error) {
                 var reportMsg = 'Comments failed to load: ',
                     request = error.request;
@@ -188,7 +171,9 @@ Loader.prototype.initPageSizeDropdown = function(pageSize) {
         this.comments.options.pagesize = selectedPageSize;
         $pagesizeLabel.text(selectedPageSize);
         userPrefs.set('discussion.pagesize', selectedPageSize);
-        this.loadComments({page: 1});
+        this.loadComments({
+            page: 1
+        });
     });
 
 };
@@ -202,7 +187,9 @@ Loader.prototype.initToolbar = function() {
         this.comments.options.order = bonzo(e.currentTarget).data('order');
         $orderLabel.text(this.comments.options.order);
         userPrefs.set('discussion.order', this.comments.options.order);
-        this.loadComments({page: 1});
+        this.loadComments({
+            page: 1
+        });
     });
 
     var $threadingLabel = $('.js-comment-threading');
@@ -315,7 +302,7 @@ Loader.prototype.renderCommentBar = function() {
     }
 };
 
-Loader.prototype.commentPosted = function () {
+Loader.prototype.commentPosted = function() {
     this.removeState('truncated');
     this.comments.addComment.apply(this.comments, arguments);
 };
@@ -342,7 +329,7 @@ Loader.prototype.renderCommentCount = function() {
         method: 'get',
         crossOrigin: true,
         success: function(response) {
-            if(response && response.counts &&response.counts.length) {
+            if (response && response.counts && response.counts.length) {
                 var commentCount = response.counts[0].count;
                 if (commentCount > 0) {
                     // Remove non-JS links
@@ -350,9 +337,9 @@ Loader.prototype.renderCommentCount = function() {
 
                     var commentCountLabel = (commentCount === 1) ? 'comment' : 'comments',
                         html = '<a href="#comments" class="js-show-discussion commentcount tone-colour" data-link-name="Comment count">' +
-                               '  <i class="i"></i>' + commentCount +
-                               '  <span class="commentcount__label">'+commentCountLabel+'</span>' +
-                               '</a>';
+                        '  <i class="i"></i>' + commentCount +
+                        '  <span class="commentcount__label">' + commentCountLabel + '</span>' +
+                        '</a>';
                     $('.js-comment-count').html(html);
 
                     $('.js-discussion-comment-count').text('(' + commentCount + ')');
@@ -379,22 +366,26 @@ Loader.prototype.initPagination = function() {
 };
 
 Loader.prototype.gotoComment = function(id) {
-    var comment = $('#comment-'+ id, this.elem);
+    var comment = $('#comment-' + id, this.elem);
 
     if (comment.length > 0) {
-        window.location.replace('#comment-'+ id);
+        window.location.replace('#comment-' + id);
         return;
     }
 
-    this.loadComments({comment: id}).then(function() {
-        window.location.replace('#comment-'+ id);
+    this.loadComments({
+        comment: id
+    }).then(function() {
+        window.location.replace('#comment-' + id);
     });
 };
 
 Loader.prototype.gotoPage = function(page) {
     scroller.scrollToElement(qwery('.js-discussion-toolbar'), 100);
     this.comments.relativeDates();
-    this.loadComments({page: page});
+    this.loadComments({
+        page: page
+    });
 };
 
 Loader.prototype.loadComments = function(options) {
@@ -407,20 +398,20 @@ Loader.prototype.loadComments = function(options) {
     }
 
     return this.comments.fetchComments(options)
-    .then(function(){
-        this.removeState('loading');
-        if (options && options.shouldTruncate) {
-            this.setState('truncated');
-        } else {
-            // do not call removeTruncation because it could invoke another fetch.
-            this.removeState('truncated');
-        }
-        if (this.comments.shouldShowPageSizeMessage()){
-            this.setState('pagesize-msg-show');
-        } else {
-            this.removeState('pagesize-msg-show');
-        }
-    }.bind(this));
+        .then(function() {
+            this.removeState('loading');
+            if (options && options.shouldTruncate) {
+                this.setState('truncated');
+            } else {
+                // do not call removeTruncation because it could invoke another fetch.
+                this.removeState('truncated');
+            }
+            if (this.comments.shouldShowPageSizeMessage()) {
+                this.setState('pagesize-msg-show');
+            } else {
+                this.removeState('pagesize-msg-show');
+            }
+        }.bind(this));
 };
 
 Loader.prototype.removeTruncation = function() {
@@ -433,6 +424,4 @@ Loader.prototype.removeTruncation = function() {
     }
 };
 
-return Loader;
-
-}); //define
+export default Loader; //define

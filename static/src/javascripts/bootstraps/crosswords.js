@@ -1,7 +1,4 @@
-define([
-    'common/modules/crosswords/main'
-], function (init) {
-    return {
-        init: init
-    };
-});
+import init from 'common/modules/crosswords/main';
+export default {
+    init: init
+};

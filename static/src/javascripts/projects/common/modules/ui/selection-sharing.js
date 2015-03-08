@@ -1,39 +1,26 @@
-define([
-    'bean',
-    'bonzo',
-    'common/utils/_',
-    'common/utils/$',
-    'common/utils/client-rects',
-    'common/utils/config',
-    'common/utils/detect',
-    'common/utils/mediator',
-    'common/utils/template',
-    'text!common/views/ui/selection-sharing.html'
-], function (
-    bean,
-    bonzo,
-    _,
-    $,
-    clientRects,
-    config,
-    detect,
-    mediator,
-    template,
-    sharingTemplate
-    ) {
+import bean from 'bean';
+import bonzo from 'bonzo';
+import _ from 'common/utils/_';
+import $ from 'common/utils/$';
+import clientRects from 'common/utils/client-rects';
+import config from 'common/utils/config';
+import detect from 'common/utils/detect';
+import mediator from 'common/utils/mediator';
+import template from 'common/utils/template';
+import sharingTemplate from 'text!common/views/ui/selection-sharing.html';
 
-    var $body = bonzo(document.body),
-        $selectionSharing = $.create(sharingTemplate),
-        $twitterAction,
-        $emailAction,
-        twitterShortUrl = config.page.shortUrl + '/stw',
-        twitterHrefTemplate = 'https://twitter.com/intent/tweet?text="{{text}}"&url={{url}}',
-        twitterMessageLimit = 115, // 140 - t.co length - 3 chars for quotes and url spacing
-        emailShortUrl = config.page.shortUrl + '/sbl',
-        emailHrefTemplate = 'mailto:?subject={{subject}}&body="{{selection}}" {{url}}',
-        validAncestors = ['js-article__body', 'content__standfirst', 'block', 'caption--main', 'content__headline'],
+var $body = bonzo(document.body),
+    $selectionSharing = $.create(sharingTemplate),
+    $twitterAction,
+    $emailAction,
+    twitterShortUrl = config.page.shortUrl + '/stw',
+    twitterHrefTemplate = 'https://twitter.com/intent/tweet?text="{{text}}"&url={{url}}',
+    twitterMessageLimit = 115, // 140 - t.co length - 3 chars for quotes and url spacing
+    emailShortUrl = config.page.shortUrl + '/sbl',
+    emailHrefTemplate = 'mailto:?subject={{subject}}&body="{{selection}}" {{url}}',
+    validAncestors = ['js-article__body', 'content__standfirst', 'block', 'caption--main', 'content__headline'],
 
-    updateSelection = function () {
+    updateSelection = function() {
 
         var selection = window.getSelection && document.createRange && window.getSelection(),
             range,
@@ -83,25 +70,25 @@ define([
         }
     },
 
-    hideSelection = function () {
+    hideSelection = function() {
         if ($selectionSharing.hasClass('selection-sharing--active')) {
             $selectionSharing.removeClass('selection-sharing--active');
         }
     },
 
-    showSelection = function () {
+    showSelection = function() {
         if (!$selectionSharing.hasClass('selection-sharing--active')) {
             $selectionSharing.addClass('selection-sharing--active');
         }
     },
 
-    onMouseDown = function (event) {
+    onMouseDown = function(event) {
         if (!$.ancestor(event.target, 'social__item')) {
             hideSelection();
         }
     },
 
-    initSelectionSharing = function () {
+    initSelectionSharing = function() {
         // The current mobile Safari returns absolute Rect co-ordinates (instead of viewport-relative),
         // and the UI is generally fiddly on touch.
         if (!detect.hasTouchScreen()) {
@@ -116,15 +103,14 @@ define([
         }
     },
 
-    isValidSelection = function (range) {
+    isValidSelection = function(range) {
         // commonAncestorContainer is buggy, can't use it here.
-        return _.some(validAncestors, function (className) {
+        return _.some(validAncestors, function(className) {
             return $.ancestor(range.startContainer, className) && $.ancestor(range.endContainer, className);
         });
     };
 
-    return {
-        init: initSelectionSharing,
-        updateSelection: updateSelection
-    };
-});
+export default {
+    init: initSelectionSharing,
+    updateSelection: updateSelection
+};

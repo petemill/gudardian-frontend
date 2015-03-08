@@ -1,67 +1,54 @@
 /*global twttr:false */
 
-define([
-    'bean',
-    'bonzo',
-    'qwery',
-    'lodash/collections/forEach',
-    'lodash/functions/debounce',
-    'common/utils/$',
-    'common/utils/config',
-    'common/utils/detect',
-    'common/utils/mediator'
-], function (
-    bean,
-    bonzo,
-    qwery,
-    forEach,
-    debounce,
-    $,
-    config,
-    detect,
-    mediator
-) {
-    var body = qwery('.js-liveblog-body');
+import bean from 'bean';
+import bonzo from 'bonzo';
+import qwery from 'qwery';
+import forEach from 'lodash/collections/forEach';
+import debounce from 'lodash/functions/debounce';
+import $ from 'common/utils/$';
+import config from 'common/utils/config';
+import detect from 'common/utils/detect';
+import mediator from 'common/utils/mediator';
+var body = qwery('.js-liveblog-body');
 
-    function bootstrap() {
-        mediator.on('window:scroll', debounce(enhanceTweets, 200));
+function bootstrap() {
+    mediator.on('window:scroll', debounce(enhanceTweets, 200));
+}
+
+function enhanceTweets() {
+    if (detect.getBreakpoint() === 'mobile' || !config.switches.enhanceTweets) {
+        return;
     }
 
-    function enhanceTweets() {
-        if (detect.getBreakpoint() === 'mobile' || !config.switches.enhanceTweets) {
-            return;
+    var scriptElement,
+        tweetElements = qwery('blockquote.js-tweet'),
+        widgetScript = qwery('#twitter-widget'),
+        viewportHeight = bonzo.viewport().height,
+        nativeTweetElements = qwery('blockquote.twitter-tweet');
+
+    tweetElements.forEach(function(element) {
+        var $el = bonzo(element);
+        if (((bonzo(document.body).scrollTop() + (viewportHeight * 2.5)) > $el.offset().top) && (bonzo(document.body).scrollTop() < ($el.offset().top + $el.offset().height))) {
+            $(element).removeClass('js-tweet').addClass('twitter-tweet');
         }
+    });
 
-        var scriptElement,
-            tweetElements       = qwery('blockquote.js-tweet'),
-            widgetScript        = qwery('#twitter-widget'),
-            viewportHeight      = bonzo.viewport().height,
-            nativeTweetElements = qwery('blockquote.twitter-tweet');
-
-        tweetElements.forEach(function (element) {
-            var $el = bonzo(element);
-            if (((bonzo(document.body).scrollTop() + (viewportHeight * 2.5)) > $el.offset().top) && (bonzo(document.body).scrollTop() < ($el.offset().top + $el.offset().height))) {
-                $(element).removeClass('js-tweet').addClass('twitter-tweet');
-            }
-        });
-
-        if (nativeTweetElements.length > 0) {
-            if (widgetScript.length === 0) {
-                scriptElement = document.createElement('script');
-                scriptElement.id = 'twitter-widget';
-                scriptElement.async = true;
-                scriptElement.src = '//platform.twitter.com/widgets.js';
-                $(document.body).append(scriptElement);
-            } else {
-                if (typeof twttr !== 'undefined' && 'widgets' in twttr && 'load' in twttr.widgets) {
-                    twttr.widgets.load(body);
-                }
+    if (nativeTweetElements.length > 0) {
+        if (widgetScript.length === 0) {
+            scriptElement = document.createElement('script');
+            scriptElement.id = 'twitter-widget';
+            scriptElement.async = true;
+            scriptElement.src = '//platform.twitter.com/widgets.js';
+            $(document.body).append(scriptElement);
+        } else {
+            if (typeof twttr !== 'undefined' && 'widgets' in twttr && 'load' in twttr.widgets) {
+                twttr.widgets.load(body);
             }
         }
     }
+}
 
-    return {
-        init: bootstrap,
-        enhanceTweets: enhanceTweets
-    };
-});
+export default {
+    init: bootstrap,
+    enhanceTweets: enhanceTweets
+};

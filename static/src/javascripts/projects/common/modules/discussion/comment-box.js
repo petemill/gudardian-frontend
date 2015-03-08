@@ -1,28 +1,14 @@
-define([
-    'common/utils/$',
-    'bean',
-    'bonzo',
-    'lodash/functions/debounce',
-    'common/utils/config',
-    'common/utils/mediator',
-    'common/modules/discussion/api',
-    'common/modules/identity/api',
-    'common/modules/component',
-    'common/modules/discussion/user-avatars',
-    'common/modules/identity/validation-email'
-], function(
-    $,
-    bean,
-    bonzo,
-    debounce,
-    config,
-    mediator,
-    DiscussionApi,
-    IdentityApi,
-    Component,
-    UserAvatars,
-    ValidationEmail
-) {
+import $ from 'common/utils/$';
+import bean from 'bean';
+import bonzo from 'bonzo';
+import debounce from 'lodash/functions/debounce';
+import config from 'common/utils/config';
+import mediator from 'common/utils/mediator';
+import DiscussionApi from 'common/modules/discussion/api';
+import IdentityApi from 'common/modules/identity/api';
+import Component from 'common/modules/component';
+import UserAvatars from 'common/modules/discussion/user-avatars';
+import ValidationEmail from 'common/modules/identity/validation-email';
 
 /**
  * @constructor
@@ -72,12 +58,12 @@ CommentBox.prototype.errorMessages = {
     ENHANCE_YOUR_CALM: 'You can only post one comment every minute. Please try again in a moment.',
     USER_BANNED: 'Commenting has been disabled for this account (<a href="/community-faqs#321a">why?</a>).',
     API_ERROR: 'Sorry, there was a problem posting your comment.',
-    EMAIL_VERIFIED: '<span class="d-comment-box__error-meta">Sent. Please check your email to verify '+
-        (IdentityApi.getUserFromCookie() ? IdentityApi.getUserFromCookie().primaryEmailAddress : ' your email address') +'. Once verified post your comment.</span>',
-    EMAIL_VERIFIED_FAIL: 'We are having technical difficulties. Please try again later or '+
+    EMAIL_VERIFIED: '<span class="d-comment-box__error-meta">Sent. Please check your email to verify ' +
+        (IdentityApi.getUserFromCookie() ? IdentityApi.getUserFromCookie().primaryEmailAddress : ' your email address') + '. Once verified post your comment.</span>',
+    EMAIL_VERIFIED_FAIL: 'We are having technical difficulties. Please try again later or ' +
         '<a href="/send/email" class="js-id-send-validation-email"><strong>resend the verification</strong></a>.',
-    EMAIL_NOT_VERIFIED: 'Please confirm your email address to post your first comment.<br />'+
-        '<a href="_#" class="js-id-send-validation-email"><strong>Send verification email</strong></a><span class="d-comment-box__error-meta"> to '+
+    EMAIL_NOT_VERIFIED: 'Please confirm your email address to post your first comment.<br />' +
+        '<a href="_#" class="js-id-send-validation-email"><strong>Send verification email</strong></a><span class="d-comment-box__error-meta"> to ' +
         (IdentityApi.getUserFromCookie() ? IdentityApi.getUserFromCookie().primaryEmailAddress : ' your email address') + '.</span>'
 };
 
@@ -130,7 +116,7 @@ CommentBox.prototype.prerender = function() {
         this.getElem('parent-comment-body').innerHTML = this.options.replyTo.body;
 
         var setSpoutMargin = function() {
-            var spoutOffset = replyToAuthor.offsetLeft + (replyToAuthor.getBoundingClientRect().width/2);
+            var spoutOffset = replyToAuthor.offsetLeft + (replyToAuthor.getBoundingClientRect().width / 2);
             this.getElem('parent-comment-spout').style.marginLeft = spoutOffset + 'px';
         };
         window.setTimeout(setSpoutMargin.bind(this), 0);
@@ -181,7 +167,7 @@ CommentBox.prototype.urlify = function(str) {
         regexp = new RegExp(reUrl + reOutsideTags, 'g');
     return str.replace(regexp, function(match, url, protocol) {
         var fullUrl = protocol === 'www.' ? 'http://' + url : url;
-        return '<a href="' + fullUrl +'">' + url + '</a>';
+        return '<a href="' + fullUrl + '">' + url + '</a>';
     });
 };
 
@@ -197,14 +183,14 @@ CommentBox.prototype.postComment = function(e) {
     e.preventDefault();
     self.clearErrors();
 
-    var validEmailCommentSubmission = function () {
+    var validEmailCommentSubmission = function() {
         if (comment.body === '') {
             self.error('EMPTY_COMMENT_BODY');
         }
 
         if (comment.body.length > self.options.maxLength) {
-            self.error('COMMENT_TOO_LONG', '<b>Comments must be shorter than '+ self.options.maxLength +' characters.</b>'+
-                'Yours is currently '+ (comment.body.length-self.options.maxLength) +' character(s) too long.');
+            self.error('COMMENT_TOO_LONG', '<b>Comments must be shorter than ' + self.options.maxLength + ' characters.</b>' +
+                'Yours is currently ' + (comment.body.length - self.options.maxLength) + ' character(s) too long.');
         }
 
         if (self.options.replyTo) {
@@ -220,7 +206,7 @@ CommentBox.prototype.postComment = function(e) {
         }
     };
 
-    var invalidEmailError = function () {
+    var invalidEmailError = function() {
         self.error('EMAIL_NOT_VERIFIED');
         ValidationEmail.init();
     };
@@ -229,7 +215,7 @@ CommentBox.prototype.postComment = function(e) {
         // Cookie could be stale so lets refresh and check from the api
         var createdDate = new Date(self.getUserData().accountCreatedDate);
         if (createdDate > self.options.priorToVerificationDate) {
-            IdentityApi.getUserFromApiWithRefreshedCookie().then(function (response) {
+            IdentityApi.getUserFromApiWithRefreshedCookie().then(function(response) {
                 if (response.user.statusFields.userEmailValidated === true) {
                     validEmailCommentSubmission();
                 } else {
@@ -254,9 +240,9 @@ CommentBox.prototype.error = function(type, message) {
 
     this.setState('invalid');
     var error = bonzo.create(
-        '<div class="d-discussion__error '+ this.getClass('error', true) +'">'+
-            '<i class="i i-alert"></i>'+
-            '<span class="d-discussion__error-text">'+ message +'</span>'+
+        '<div class="d-discussion__error ' + this.getClass('error', true) + '">' +
+        '<i class="i i-alert"></i>' +
+        '<span class="d-discussion__error-text">' + message + '</span>' +
         '</div>'
     )[0];
     this.getElem('messages').appendChild(error);
@@ -284,8 +270,11 @@ CommentBox.prototype.fail = function(xhr) {
     var response;
     // if our API is down, it returns HTML
     // this is not so good for JSON.parse
-    try { response = JSON.parse(xhr.responseText); }
-        catch (e) { response = {}; }
+    try {
+        response = JSON.parse(xhr.responseText);
+    } catch (e) {
+        response = {};
+    }
 
     this.setFormState();
 
@@ -379,8 +368,8 @@ CommentBox.prototype.previewComment = function(e) {
     }
 
     if (comment.body.length > self.options.maxLength) {
-        self.error('COMMENT_TOO_LONG', '<b>Comments must be shorter than '+ self.options.maxLength +' characters.</b>'+
-            'Yours is currently '+ (comment.body.length-self.options.maxLength) +' characters too long.');
+        self.error('COMMENT_TOO_LONG', '<b>Comments must be shorter than ' + self.options.maxLength + ' characters.</b>' +
+            'Yours is currently ' + (comment.body.length - self.options.maxLength) + ' characters too long.');
     }
 
     if (self.errors.length === 0) {
@@ -419,12 +408,12 @@ CommentBox.prototype.formatComment = function(formatStyle) {
 
     var commentBody = this.getElem('body');
     var cursorPositionStart = commentBody.selectionStart;
-    var selectedText = commentBody.value.substring(commentBody.selectionStart,commentBody.selectionEnd);
+    var selectedText = commentBody.value.substring(commentBody.selectionStart, commentBody.selectionEnd);
 
-    var formatSelection = function(startTag,endTag) {
+    var formatSelection = function(startTag, endTag) {
         var newText = startTag + selectedText + endTag;
 
-        commentBody.value = commentBody.value.substring(0, commentBody.selectionStart)+
+        commentBody.value = commentBody.value.substring(0, commentBody.selectionStart) +
             newText + commentBody.value.substring(commentBody.selectionEnd);
 
         selectNewText(newText);
@@ -448,18 +437,18 @@ CommentBox.prototype.formatComment = function(formatStyle) {
     };
 
     var selectNewText = function(newText) {
-        commentBody.setSelectionRange(cursorPositionStart,cursorPositionStart+newText.length);
+        commentBody.setSelectionRange(cursorPositionStart, cursorPositionStart + newText.length);
     };
 
-    switch(formatStyle) {
+    switch (formatStyle) {
         case 'bold':
-            formatSelection('<b>','</b>');
+            formatSelection('<b>', '</b>');
             break;
         case 'italic':
-            formatSelection('<i>','</i>');
+            formatSelection('<i>', '</i>');
             break;
         case 'quote':
-            formatSelection('<blockquote>','</blockquote>');
+            formatSelection('<blockquote>', '</blockquote>');
             break;
         case 'link':
             formatSelectionLink();
@@ -467,6 +456,4 @@ CommentBox.prototype.formatComment = function(formatStyle) {
     }
 };
 
-return CommentBox;
-
-}); // define
+export default CommentBox; // define

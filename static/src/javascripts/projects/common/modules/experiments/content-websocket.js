@@ -1,49 +1,41 @@
-define([
-    'bonzo',
-    'raven',
-    'common/utils/$',
-    'common/utils/detect'
-], function (
-    bonzo,
-    raven,
-    $,
-    detect
-) {
+import bonzo from 'bonzo';
+import raven from 'raven';
+import $ from 'common/utils/$';
+import detect from 'common/utils/detect';
 
-    function connect(config) {
+function connect(config) {
 
-        if (!detect.hasWebSocket()) {
-            return;
-        }
-
-        var $pushedContent,
-            chatSocket   = new window.WebSocket(config.page.onwardWebSocket),
-            receiveEvent = function (event) {
-                if (event && 'data' in event) {
-                    var data = JSON.parse(event.data);
-
-                    if (data.error) {
-                        chatSocket.close();
-                    } else {
-                        $pushedContent = bonzo.create('<div>' + data.headline + ' ' + data.url + '</div>');
-                        bonzo($pushedContent).addClass('pushed-content lazyloaded');
-                        $('.monocolumn-wrapper').after($pushedContent);
-                    }
-                } else {
-                    raven.captureMessage('Invalid data returned from socket');
-                }
-            },
-            disconnectEvent = function () {
-                chatSocket.close();
-                connect(config);
-            };
-
-        chatSocket.onmessage = receiveEvent;
-        chatSocket.onerror = disconnectEvent;
-        chatSocket.onclose = disconnectEvent;
+    if (!detect.hasWebSocket()) {
+        return;
     }
 
-    return {
-        connect: connect
-    };
-});
+    var $pushedContent,
+        chatSocket = new window.WebSocket(config.page.onwardWebSocket),
+        receiveEvent = function(event) {
+            if (event && 'data' in event) {
+                var data = JSON.parse(event.data);
+
+                if (data.error) {
+                    chatSocket.close();
+                } else {
+                    $pushedContent = bonzo.create('<div>' + data.headline + ' ' + data.url + '</div>');
+                    bonzo($pushedContent).addClass('pushed-content lazyloaded');
+                    $('.monocolumn-wrapper').after($pushedContent);
+                }
+            } else {
+                raven.captureMessage('Invalid data returned from socket');
+            }
+        },
+        disconnectEvent = function() {
+            chatSocket.close();
+            connect(config);
+        };
+
+    chatSocket.onmessage = receiveEvent;
+    chatSocket.onerror = disconnectEvent;
+    chatSocket.onclose = disconnectEvent;
+}
+
+export default {
+    connect: connect
+};

@@ -1,14 +1,8 @@
-define([
-    'common/modules/component'
-], function (
-    component
-) {
+import component from 'common/modules/component';
 
-    var ScoreBoard = function () {};
-    component.define(ScoreBoard);
-    ScoreBoard.prototype.componentClass = 'match-summary';
-    ScoreBoard.prototype.responseDataKey = 'matchSummary';
+var ScoreBoard = function() {};
+component.define(ScoreBoard);
+ScoreBoard.prototype.componentClass = 'match-summary';
+ScoreBoard.prototype.responseDataKey = 'matchSummary';
 
-    return ScoreBoard;
-
-}); // define
+export default ScoreBoard; // define

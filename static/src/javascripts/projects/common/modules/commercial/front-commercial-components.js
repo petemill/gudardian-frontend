@@ -1,43 +1,34 @@
-define([
-    'bonzo',
-    'common/utils/$',
-    'common/utils/config',
-    'common/modules/commercial/create-ad-slot'
-], function (
-    bonzo,
-    $,
-    config,
-    createAdSlot
-) {
+import bonzo from 'bonzo';
+import $ from 'common/utils/$';
+import config from 'common/utils/config';
+import createAdSlot from 'common/modules/commercial/create-ad-slot';
 
-    function init() {
-        if (!config.switches.commercialComponents || !config.page.isFront) {
-            return false;
-        }
-
-        var containerIndex,
-            $adSlotWrapper = $.create('<div class="fc-container"></div>'),
-            $adSlot        = bonzo(createAdSlot('merchandising-high', 'commercial-component-high')),
-            $containers    = $('.fc-container');
-
-        if ($containers.length >= 2) {
-            containerIndex = 0;
-
-            if ($containers.length >= 4) {
-                containerIndex = config.page.contentType === 'Network Front' ? 3 : 2;
-            }
-
-            return $adSlotWrapper
-                .append($adSlot)
-                .insertAfter($containers[containerIndex]);
-        }
-
+function init() {
+    if (!config.switches.commercialComponents || !config.page.isFront) {
+        return false;
     }
 
-    return {
+    var containerIndex,
+        $adSlotWrapper = $.create('<div class="fc-container"></div>'),
+        $adSlot = bonzo(createAdSlot('merchandising-high', 'commercial-component-high')),
+        $containers = $('.fc-container');
 
-        init: init
+    if ($containers.length >= 2) {
+        containerIndex = 0;
 
-    };
+        if ($containers.length >= 4) {
+            containerIndex = config.page.contentType === 'Network Front' ? 3 : 2;
+        }
 
-});
+        return $adSlotWrapper
+            .append($adSlot)
+            .insertAfter($containers[containerIndex]);
+    }
+
+}
+
+export default {
+
+    init: init
+
+};

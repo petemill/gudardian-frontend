@@ -1,3 +1,2 @@
-define(['membership/membership-tab'], function (membershipTab) {
-    return membershipTab;
-});
+import membershipTab from 'membership/membership-tab';
+export default membershipTab;

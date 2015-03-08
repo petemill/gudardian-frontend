@@ -1,31 +1,24 @@
-define([
-    'common/utils/config',
-    'common/utils/cookies',
-    'common/utils/storage'
-], function (
-    config,
-    cookies,
-    storage
-) {
-    function load() {
-        if (config.switches.krux) {
-            return require(['js!' + '//cdn.krxd.net/controltag?confid=JVZiE3vn']);
-        }
+import config from 'common/utils/config';
+import cookies from 'common/utils/cookies';
+import storage from 'common/utils/storage';
+
+function load() {
+    if (config.switches.krux) {
+        return require(['js!' + '//cdn.krxd.net/controltag?confid=JVZiE3vn']);
     }
+}
 
-    function retrieve(n) {
-        var k = 'kx' + n;
+function retrieve(n) {
+    var k = 'kx' + n;
 
-        return storage.local.getRaw(k) || cookies.get(k + '=([^;]*)') || '';
-    }
+    return storage.local.getRaw(k) || cookies.get(k + '=([^;]*)') || '';
+}
 
-    function getSegments() {
-        return retrieve('segs') ? retrieve('segs').split(',') : [];
-    }
+function getSegments() {
+    return retrieve('segs') ? retrieve('segs').split(',') : [];
+}
 
-    return {
-        load: load,
-        getSegments: getSegments
-    };
-
-});
+export default {
+    load: load,
+    getSegments: getSegments
+};

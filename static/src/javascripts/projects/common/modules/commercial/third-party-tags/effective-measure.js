@@ -1,20 +1,14 @@
-define([
-    'common/utils/config'
-], function (
-    config
-) {
+import config from 'common/utils/config';
 
-    var effectiveMeasureUrl = (document.location.protocol === 'https:' ? 'https://au-ssl' : 'http://au-cdn') +
-        '.effectivemeasure.net/em.js';
+var effectiveMeasureUrl = (document.location.protocol === 'https:' ? 'https://au-ssl' : 'http://au-cdn') +
+    '.effectivemeasure.net/em.js';
 
-    function load() {
-        if (config.switches.effectiveMeasure) {
-            return require(['js!' + effectiveMeasureUrl + '!exports=_EMeasure']);
-        }
+function load() {
+    if (config.switches.effectiveMeasure) {
+        return require(['js!' + effectiveMeasureUrl + '!exports=_EMeasure']);
     }
+}
 
-    return {
-        load: load
-    };
-
-});
+export default {
+    load: load
+};

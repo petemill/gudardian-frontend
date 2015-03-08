@@ -1,24 +1,18 @@
-define([
-    'bean',
-    'qwery',
-    'common/utils/$'
-], function (
-    bean,
-    qwery,
-    $
-) {
-    function expand() {
-        $('.js-lm').toggleClass('u-h');
-    }
+import bean from 'bean';
+import qwery from 'qwery';
+import $ from 'common/utils/$';
 
-    function init() {
-        if ($('.js-lm').length) {
-            $('.js-wpd').addClass('content__dateline-wpd--modified tone-colour');
-            bean.on(qwery('.js-wpd')[0], 'click', expand);
-        }
-    }
+function expand() {
+    $('.js-lm').toggleClass('u-h');
+}
 
-    return {
-        init: init
-    };
-});
+function init() {
+    if ($('.js-lm').length) {
+        $('.js-wpd').addClass('content__dateline-wpd--modified tone-colour');
+        bean.on(qwery('.js-wpd')[0], 'click', expand);
+    }
+}
+
+export default {
+    init: init
+};

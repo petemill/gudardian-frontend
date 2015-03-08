@@ -1,3 +1,2 @@
-define(['EventEmitter'], function (EventEmitter) {
-    return new EventEmitter();
-});
+import EventEmitter from 'EventEmitter';
+export default new EventEmitter();

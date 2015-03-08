@@ -1,7 +1,4 @@
-define([
-    'common/modules/dev/dataLinkNameDebug'
-], function (dataLinkNameDebug) {
-    return {
-        dataLinkName: dataLinkNameDebug
-    };
-});
+import dataLinkNameDebug from 'common/modules/dev/dataLinkNameDebug';
+export default {
+    dataLinkName: dataLinkNameDebug
+};

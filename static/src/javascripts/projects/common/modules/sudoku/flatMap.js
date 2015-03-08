@@ -1,9 +1,4 @@
-define([
-    'common/utils/_'
-], function (
-    _
-) {
-    return function (xs, f) {
-        return Array.prototype.concat.apply([], _.map(xs, f));
-    };
-});
+import _ from 'common/utils/_';
+export default function(xs, f) {
+    return Array.prototype.concat.apply([], _.map(xs, f));
+};

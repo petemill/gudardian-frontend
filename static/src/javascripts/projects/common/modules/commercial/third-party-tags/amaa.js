@@ -1,19 +1,13 @@
-define([
-    'common/utils/config'
-], function (
-    config
-) {
+import config from 'common/utils/config';
 
-    var ammaUrl = '//c.supert.ag/the-guardian/the-guardian/supertag-async.js';
+var ammaUrl = '//c.supert.ag/the-guardian/the-guardian/supertag-async.js';
 
-    function load() {
-        if (config.switches.amaa) {
-            return require(['js!' + ammaUrl + '!exports=superT']);
-        }
+function load() {
+    if (config.switches.amaa) {
+        return require(['js!' + ammaUrl + '!exports=superT']);
     }
+}
 
-    return {
-        load: load
-    };
-
-});
+export default {
+    load: load
+};

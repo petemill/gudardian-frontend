@@ -1,11 +1,9 @@
-define([
-    'common/modules/commercial/creatives/branded-component',
-    'common/modules/commercial/creatives/commercial-component',
-    'common/modules/commercial/creatives/expandable',
-    'common/modules/commercial/creatives/expandable-v2',
-    'common/modules/commercial/creatives/fluid250',
-    'common/modules/commercial/creatives/fluid250GoogleAndroid',
-    'common/modules/commercial/creatives/foundation-funded-logo',
-    'common/modules/commercial/creatives/scrollable-mpu',
-    'common/modules/commercial/creatives/template'
-], function () {});
+import 'common/modules/commercial/creatives/branded-component';
+import 'common/modules/commercial/creatives/commercial-component';
+import 'common/modules/commercial/creatives/expandable';
+import 'common/modules/commercial/creatives/expandable-v2';
+import 'common/modules/commercial/creatives/fluid250';
+import 'common/modules/commercial/creatives/fluid250GoogleAndroid';
+import 'common/modules/commercial/creatives/foundation-funded-logo';
+import 'common/modules/commercial/creatives/scrollable-mpu';
+import 'common/modules/commercial/creatives/template';

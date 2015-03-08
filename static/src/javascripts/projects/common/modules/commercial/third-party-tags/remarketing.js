@@ -1,28 +1,22 @@
-define([
-    'common/utils/config'
-], function (
-    config
-) {
+import config from 'common/utils/config';
 
-    var remarketingUrl = '//www.googleadservices.com/pagead/conversion_async.js';
+var remarketingUrl = '//www.googleadservices.com/pagead/conversion_async.js';
 
-    function load() {
+function load() {
 
-        if (config.switches.remarketing) {
-            return require(['js!' + remarketingUrl + '!exports=google_trackConversion'], function () {
-                /* jscs:disable requireCamelCaseOrUpperCaseIdentifiers */
-                window.google_trackConversion({
-                    google_conversion_id: 971225648,
-                    google_custom_params: window.google_tag_params,
-                    google_remarketing_only: true
-                });
+    if (config.switches.remarketing) {
+        return require(['js!' + remarketingUrl + '!exports=google_trackConversion'], function() {
+            /* jscs:disable requireCamelCaseOrUpperCaseIdentifiers */
+            window.google_trackConversion({
+                google_conversion_id: 971225648,
+                google_custom_params: window.google_tag_params,
+                google_remarketing_only: true
             });
-        }
-
+        });
     }
 
-    return {
-        load: load
-    };
+}
 
-});
+export default {
+    load: load
+};

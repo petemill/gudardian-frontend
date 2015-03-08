@@ -1,10 +1,8 @@
-define([
-    'common/modules/identity/public-profile'
-], function (
-    PublicProfile
-) {
-    function init() {
-        PublicProfile.init();
-    }
-    return { init: init };
-});
+import PublicProfile from 'common/modules/identity/public-profile';
+
+function init() {
+    PublicProfile.init();
+}
+export default {
+    init: init
+};

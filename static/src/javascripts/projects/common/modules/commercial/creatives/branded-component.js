@@ -1,79 +1,63 @@
-define([
-    'qwery',
-    'common/utils/$',
-    'common/utils/config',
-    'common/utils/template',
-    'common/views/svgs',
-    'text!common/views/commercial/creatives/branded-component-jobs.html',
-    'text!common/views/commercial/creatives/branded-component-membership.html',
-    'text!common/views/commercial/creatives/branded-component-soulmates.html',
-    'lodash/objects/defaults'
-], function (
-    qwery,
-    $,
-    config,
-    template,
-    svgs,
-    brandedComponentJobsTpl,
-    brandedComponentMembershipTpl,
-    brandedComponentSoulmatesTpl,
-    defaults
-) {
+import qwery from 'qwery';
+import $ from 'common/utils/$';
+import config from 'common/utils/config';
+import template from 'common/utils/template';
+import svgs from 'common/views/svgs';
+import brandedComponentJobsTpl from 'text!common/views/commercial/creatives/branded-component-jobs.html';
+import brandedComponentMembershipTpl from 'text!common/views/commercial/creatives/branded-component-membership.html';
+import brandedComponentSoulmatesTpl from 'text!common/views/commercial/creatives/branded-component-soulmates.html';
+import defaults from 'lodash/objects/defaults';
 
-    var templates = {
-            jobs: {
-                template: brandedComponentJobsTpl,
-                config:   {
-                    imgUrl: config.images.commercial.brandedComponentJobs,
-                    marque36icon: svgs('marque36icon', ['creative__marque'])
-                }
-            },
-            membership: {
-                template: brandedComponentMembershipTpl,
-                config:   {
-                    marque36icon: svgs('marque36icon', ['creative__marque'])
-                }
-            },
-            soulmates: {
-                template: brandedComponentSoulmatesTpl,
-                config:   {
-                    logosoulmates: svgs('logosoulmates'),
-                    profileImgM: config.images.commercial.brandedComponentSoulmatesM,
-                    profileImgF: config.images.commercial.brandedComponentSoulmatesF
-                }
+var templates = {
+        jobs: {
+            template: brandedComponentJobsTpl,
+            config: {
+                imgUrl: config.images.commercial.brandedComponentJobs,
+                marque36icon: svgs('marque36icon', ['creative__marque'])
             }
         },
-        /**
-         * https://www.google.com/dfp/59666047#delivery/CreateCreativeTemplate/creativeTemplateId=10027767
-         */
-        BrandedComponent = function ($adSlot, params, options) {
-            this.$adSlot = $adSlot;
-            this.params  = params;
-            this.opts = defaults(options || {}, {
-                force: false
-            });
-        };
-
-    BrandedComponent.prototype.create = function () {
-        var templateConfig = templates[this.params.type],
-            $rightHandCol  = $('.js-secondary-column');
-
-        if (
-            !this.opts.force && (!templateConfig ||
-            $rightHandCol.css('display') === 'none' ||
-            $rightHandCol.dim().height < 1800 ||
-            config.page.section === 'football')
-        ) {
-            return false;
+        membership: {
+            template: brandedComponentMembershipTpl,
+            config: {
+                marque36icon: svgs('marque36icon', ['creative__marque'])
+            }
+        },
+        soulmates: {
+            template: brandedComponentSoulmatesTpl,
+            config: {
+                logosoulmates: svgs('logosoulmates'),
+                profileImgM: config.images.commercial.brandedComponentSoulmatesM,
+                profileImgF: config.images.commercial.brandedComponentSoulmatesF
+            }
         }
-
-        templateConfig.config.clickMacro = this.params.clickMacro;
-        templateConfig.config.omnitureId = this.params.omnitureId;
-
-        $.create(template(templateConfig.template, templateConfig.config))
-            .appendTo($rightHandCol);
+    },
+    /**
+     * https://www.google.com/dfp/59666047#delivery/CreateCreativeTemplate/creativeTemplateId=10027767
+     */
+    BrandedComponent = function($adSlot, params, options) {
+        this.$adSlot = $adSlot;
+        this.params = params;
+        this.opts = defaults(options || {}, {
+            force: false
+        });
     };
 
-    return BrandedComponent;
+BrandedComponent.prototype.create = function() {
+    var templateConfig = templates[this.params.type],
+        $rightHandCol = $('.js-secondary-column');
 
-});
+    if (!this.opts.force && (!templateConfig ||
+            $rightHandCol.css('display') === 'none' ||
+            $rightHandCol.dim().height < 1800 ||
+            config.page.section === 'football')) {
+        return false;
+    }
+
+    templateConfig.config.clickMacro = this.params.clickMacro;
+    templateConfig.config.omnitureId = this.params.omnitureId;
+
+    $.create(template(templateConfig.template, templateConfig.config))
+        .appendTo($rightHandCol);
+};
+
+export default BrandedComponent;
