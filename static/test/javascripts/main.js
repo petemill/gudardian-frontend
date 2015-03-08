@@ -7,7 +7,7 @@ for (var file in window.__karma__.files) {
 
 requirejs.config({
     // Karma serves files from '/base'
-    baseUrl: '/base/static/src/javascripts',
+    baseUrl: '/base/static/src/javascripts/.tmp',
     paths: {
         bootsraps:    'bootstraps',
         admin:        'projects/admin',
@@ -40,7 +40,7 @@ requirejs.config({
     },
     shim: {
         imager: {
-            deps: ['/base/static/src/javascripts/components/imager.js/imager.js'],
+            deps: ['/base/static/src/javascripts/.tmp/components/imager.js/imager.js'],
             exports: 'Imager'
         },
         googletag: {
