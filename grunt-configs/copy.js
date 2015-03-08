@@ -1,5 +1,13 @@
 module.exports = function(grunt, options) {
     return {
+        'javascriptTranspilation': {
+            files: [{
+                expand: true,
+                cwd: 'static/src/javascripts',
+                src: ['**/*'],
+                dest: options.babelTempDir
+            }]
+        },
         'javascript': {
             files: [
                 {

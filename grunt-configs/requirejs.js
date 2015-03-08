@@ -1,7 +1,7 @@
 module.exports = function(grunt, options) {
     return {
         options: {
-            baseUrl: 'static/src/javascripts',
+            baseUrl: options.babelTempDir,
             paths: {
                 admin:                'projects/admin',
                 common:               'projects/common',
@@ -22,10 +22,10 @@ module.exports = function(grunt, options) {
                 raven:                'components/raven-js/raven',
                 react:                'components/react/react',
                 reqwest:              'components/reqwest/reqwest',
-                omniture:             '../../public/javascripts/vendor/omniture',
+                omniture:             '../../../public/javascripts/vendor/omniture',
                 socketio:             'components/socket.io-client/socket.io',
-                stripe:               '../../public/javascripts/vendor/stripe/stripe.min',
-                svgs:                 '../../../common/conf/assets/inline-svgs',
+                stripe:               '../../../public/javascripts/vendor/stripe/stripe.min',
+                svgs:                 '../../../../common/conf/assets/inline-svgs',
                 videojs:              'components/videojs/video',
                 videojsads:           'components/videojs-contrib-ads/videojs.ads',
                 videojsembed:         'components/videojs-embed/videojs.embed',
@@ -160,7 +160,7 @@ module.exports = function(grunt, options) {
                 exclude: [
                     'core',
                     'bootstraps/app',
-                    '../../public/javascripts/vendor/stripe/stripe.min',
+                    '../../../public/javascripts/vendor/stripe/stripe.min',
                     'text',
                     'inlineSvg'
                 ]

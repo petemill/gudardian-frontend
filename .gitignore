@@ -28,6 +28,7 @@ log
 logs
 
 tmp
+.tmp
 old
 target
 .target

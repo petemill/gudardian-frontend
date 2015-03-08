@@ -1,5 +1,8 @@
 module.exports = function(grunt, options) {
     return {
+        javascriptTranspilation: [
+            options.babelTempDir
+        ],
         js: [
             options.staticTargetDir + 'javascripts',
             options.staticHashDir + 'javascripts',
