@@ -11,7 +11,7 @@ module.exports = function (grunt) {
         staticHashDir:   './static/hash/',
         testConfDir:     './static/test/javascripts/conf/',
         requirejsDir:    './static/requirejs',
-        babelTempDir:    './static/src/javascripts/.tmp'
+        babelTempDir:    './static/src/javascripts/.tmp',
         webfontsDir:     './static/src/stylesheets/components/guss-webfonts/webfonts/'
     };
 
@@ -81,7 +81,7 @@ module.exports = function (grunt) {
 
     });
     grunt.registerTask('compile:js', function(fullCompile) {
-        grunt.task.run(['compile:inlineSvgs', 'clean:javascriptTranspilation', 'copy:javascriptTranspilation', 'babel', 'requirejs', 'copy:javascript', 'clean:javascriptTranspilation']);
+        grunt.task.run(['compile:inlineSvgs', 'clean:javascriptTranspilation', 'copy:javascriptTranspilation', 'babel', 'concurrent:requireJS', 'copy:javascript', 'clean:javascriptTranspilation']);
         if (!options.isDev) {
             grunt.task.run('uglify:javascript');
         }
