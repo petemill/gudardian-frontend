@@ -37,7 +37,7 @@ module.exports = function(grunt, options) {
                 inlineSvg:            'components/requirejs-inline-svg/inlineSvg'
             },
             optimize: options.isDev ? 'none' : 'uglify2',
-            generateSourceMaps: true,
+            generateSourceMaps: !options.isDev,
             preserveLicenseComments: false,
             fileExclusionRegExp: /^bower_components$/
         },
@@ -213,7 +213,7 @@ module.exports = function(grunt, options) {
                     'text',
                     'inlineSvg'
                 ],
-                generateSourceMaps: true,
+                generateSourceMaps: !options.isDev,
                 preserveLicenseComments: false
             }
         },
@@ -240,7 +240,7 @@ module.exports = function(grunt, options) {
                     'text',
                     'inlineSvg'
                 ],
-                generateSourceMaps: true,
+                generateSourceMaps: !options.isDev,
                 preserveLicenseComments: false
             }
         },
